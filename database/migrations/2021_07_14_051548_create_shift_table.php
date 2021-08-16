@@ -16,8 +16,9 @@ class CreateShiftTable extends Migration
         Schema::create('ms_shift', function (Blueprint $table) {
             $table->id();
             $table->string('uuid', 191)->unique();
-            $table->string('code')->unique();
-            $table->string('name');
+            $table->string('nama');
+            $table->time('mulai')->nullable();
+            $table->time('selesai')->nullable();
             $table->timestamps();
         });
     }

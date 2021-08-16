@@ -1,0 +1,38 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\Shift;
+
+class ShiftSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $pagi = Shift::create([
+            'uuid'     => generateUuid(),
+            'nama'     => 'Pagi',
+            'mulai'    => '07:00:00',
+            'selesai'  => '16:00:00',
+        ]);
+        
+        $sore = Shift::create([
+            'uuid'     => generateUuid(),
+            'nama'     => 'Siang',
+            'mulai'    => '15:00:00',
+            'selesai'  => '00:00:00',
+        ]);
+
+        $malam = Shift::create([
+            'uuid'     => generateUuid(),
+            'nama'     => 'Malam',
+            'mulai'    => '23:00:00',
+            'selesai'  => '08:00:00',
+        ]);
+    }
+}

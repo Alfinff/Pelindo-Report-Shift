@@ -118,3 +118,8 @@ function sendFcm($to, $notification, $data)
 function generateRandomString($length = 6) {
 	return substr(str_shuffle(str_repeat($x = '1234567890', ceil($length / strlen($x)))), 1, $length);
 }
+
+function public_path($path = '')
+{
+	return env('PUBLIC_PATH', base_path('public')) . ($path ? '/' . $path : $path);
+}
