@@ -10,7 +10,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
 use App\Models\Jadwal;
 use Carbon\Carbon;
-
 use App\Imports\JadwalImport;
 
 class PenjadwalanController extends Controller
@@ -37,6 +36,7 @@ class PenjadwalanController extends Controller
             }
             else {
                 $jadwal = Jadwal::with('user', 'shift')->paginate(25);
+                $jadwal = $jadwal->setPath('https://pelindo.primakom.co.id/api/shift/supervisor/jadwal');
                 if (empty($jadwal)) {
                     return response()->json([
                         'success' => false,

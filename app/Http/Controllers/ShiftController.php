@@ -20,7 +20,8 @@ class ShiftController extends Controller
     {
         try 
         {
-            $shift = Shift::all();
+            $shift = Shift::paginate(25);
+            $shift = $shift->setPath('https://pelindo.primakom.co.id/api/shift/utils/shift');
             if (empty($shift)) {
                 return response()->json([
                     'success' => false,

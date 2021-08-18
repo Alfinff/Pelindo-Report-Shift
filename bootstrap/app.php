@@ -61,7 +61,7 @@ $app->singleton(
 
 $app->configure('cors');
 $app->configure('app');
-$app->configure('mail');
+// $app->configure('mail');
 
 
 /*
@@ -75,9 +75,9 @@ $app->configure('mail');
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    App\Http\Middleware\CorsMiddleware::class
+]);
 
 $app->routeMiddleware([
 	'jwt.auth'        => App\Http\Middleware\JwtMiddleware::class,
@@ -98,9 +98,9 @@ $app->routeMiddleware([
 |
 */
 
-$app->register(App\Providers\AppServiceProvider::class);
-$app->register(App\Providers\AuthServiceProvider::class);
-$app->register(App\Providers\EventServiceProvider::class);
+// $app->register(App\Providers\AppServiceProvider::class);
+// $app->register(App\Providers\AuthServiceProvider::class);
+// $app->register(App\Providers\EventServiceProvider::class);
 
 $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 $app->withFacades(true, [
@@ -140,12 +140,6 @@ $app->router->group([
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
-
-
-// $app->make('url')->to(env('APP_URL'));
-// $app['url']->to(env('APP_URL'));
-
-//$app->make('url')->forceRootUrl(env('APP_URL', env('APP_URL')));
 
 return $app;
 
