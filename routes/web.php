@@ -13,6 +13,9 @@
 |
 */
 
+\URL::forceScheme('https');
+\URL::forceRootUrl(env('APP_URL', 'https://pelindo.primakom.co.id/api/shift/'));
+
 $router->get('/', function () use ($router) {
     echo 'API Pelindo Report - Shift';
 });
@@ -26,18 +29,15 @@ $router->group(['prefix' => 'supervisor', 'middleware' => ['jwt.auth', 'role.sup
         $router->get('/', 'PenjadwalanController@index');
         $router->get('/{id}', 'PenjadwalanController@show');
         $router->post('/', 'PenjadwalanController@store');
-    });  
+    });
 });
 
 $router->group(['prefix' => 'eos', 'middleware' => ['jwt.auth', 'role.eos']], function() use ($router) {
     
 });
 
-
 $router->group(['prefix' => 'utils'], function() use ($router) {
     $router->group(['prefix' => 'shift'], function() use ($router) {
         $router->get('/', 'ShiftController@index');
     });    
 });
-
-

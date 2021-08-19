@@ -61,7 +61,7 @@ $app->singleton(
 
 $app->configure('cors');
 $app->configure('app');
-// $app->configure('mail');
+$app->configure('mail');
 
 
 /*
@@ -76,6 +76,7 @@ $app->configure('app');
 */
 
 $app->middleware([
+    // App\Http\Middleware\ExampleMiddleware::class
     App\Http\Middleware\CorsMiddleware::class
 ]);
 
@@ -98,9 +99,9 @@ $app->routeMiddleware([
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 
 $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 $app->withFacades(true, [
@@ -116,9 +117,6 @@ $app->register(GrahamCampbell\Flysystem\FlysystemServiceProvider::class);
 
 // mail
 $app->register(Illuminate\Mail\MailServiceProvider::class);
-
-// excel
-$app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -140,6 +138,12 @@ $app->router->group([
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
+
+
+// $app->make('url')->to(env('APP_URL'));
+// $app['url']->to(env('APP_URL'));
+
+$app->make('url')->forceRootUrl(env('APP_URL', 'https://pelindo.primakom.co.id/api/shift/'));
 
 return $app;
 
