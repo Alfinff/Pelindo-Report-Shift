@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Profile;
 
@@ -109,8 +110,8 @@ class UserController extends Controller
             }
             else 
             {
-                // dd($this->request->password);
-                $this->validate($this->request, [
+
+                $validator = Validator::make($this->request->all(), [
                     'nama' => 'required',
                     'email' => 'required|email',
                     'password' => 'required',
@@ -120,6 +121,11 @@ class UserController extends Controller
                     'alamat' => 'required',
                     // 'foto'   => 'required',
                 ]);
+        
+                if ($validator->fails()) {
+                    return writeLogValidation($validator->errors());
+                }
+
                 DB::beginTransaction();
                 try{
                     $user = User::create([
@@ -163,7 +169,6 @@ class UserController extends Controller
             $uuid = $decodeToken->user->uuid;
             $user = Profile::where('user_id', $uuid)->first();
             
-            // dd($this->request);
             if (!$user) {
                 return response()->json([
                     'success' => false,
@@ -172,7 +177,8 @@ class UserController extends Controller
                 ]);
             }
             else {
-                $this->validate($this->request, [
+                
+                $validator = Validator::make($this->request->all(), [
                     'nama' => 'required',
                     'email' => 'required|email',
                     'no_hp' => 'required',
@@ -181,6 +187,11 @@ class UserController extends Controller
                     'alamat' => 'required',
                     // 'foto'   => 'required',
                 ]);
+        
+                if ($validator->fails()) {
+                    return writeLogValidation($validator->errors());
+                }
+
                 DB::beginTransaction();
                 try
                 {

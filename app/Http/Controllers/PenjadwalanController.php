@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
 use App\Models\Jadwal;
@@ -113,9 +114,14 @@ class PenjadwalanController extends Controller
             } 
             else 
             {
-                $this->validate($this->request, [
+
+                $validator = Validator::make($this->request->all(), [
                     'file' => 'required|mimes:csv,xls,xlsx',
                 ]);
+        
+                if ($validator->fails()) {
+                    return writeLogValidation($validator->errors());
+                }
                 
                 try{
                     $current   = Carbon::now()->format('YmdHs');
