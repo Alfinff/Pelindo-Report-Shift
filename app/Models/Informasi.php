@@ -19,7 +19,6 @@ class Informasi extends Model
     protected $hidden = [
         'id'
     ];
-
     protected $connection = 'pelindo_repport';
     protected $table      = 'ms_informasi';
     protected $guarded    = [];
@@ -29,14 +28,23 @@ class Informasi extends Model
         return $this->belongsToMany(User::class, 'informasi_user', 'user_id', 'uuid', 'info_id', 'uuid');
     }
 
-    public function laporan_shift()
+    public function aktivitas()
     {
-        return $this->hasOne(LaporanShift::class, 'uuid', 'info_id');
+        return $this->hasOne(Aktivitas::class, 'uuid', 'aktivitas_id');
     }
 
-    public function jadwal()
+    public function getGambarUnformatedAttribute()
     {
-        return $this->hasMany(Jadwal::class, 'uuid', 'info_id');
+        return $this->attributes['gambar'];
+    }
+
+    public function getGambarAttribute($value)
+    {
+        if ($value) {
+            return Storage::disk('s3')->temporaryUrl($value, Carbon::now()->addMinutes(5));
+        }
+
+        return $value;
     }
 
     public function getIkonAttribute($ikon)

@@ -48,6 +48,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasOne(Profile::class, 'user_id', 'uuid');
     }
 
+    public function informasi_user()
+    {
+        return $this->hasMany(InformasiUser::class, 'user_id', 'uuid');
+    }
+
     public function getCreatedAtAttribute($value)
     {
         return formatTanggal($value);

@@ -19,14 +19,36 @@ class InformasiUser extends Model
     protected $hidden = [
         'id'
     ];
-
-    protected $connection = 'pelindo_repport';
-    protected $table      = 'ms_informasi_user';
-    protected $guarded    = [];
+    protected $connection  = 'pelindo_repport';
+    protected $table       = 'ms_informasi_user';
+    protected $guarded     = [];
 
     public function informasi()
     {
         return $this->hasOne(Informasi::class, 'uuid', 'informasi_id');
+    }
+
+    public function getGambarUnformatedAttribute()
+    {
+        return $this->attributes['gambar'];
+    }
+
+    public function getGambarAttribute($value)
+    {
+        if ($value) {
+            return Storage::disk('s3')->temporaryUrl($value, Carbon::now()->addMinutes(5));
+        }
+
+        return $value;
+    }
+
+    public function getIkonAttribute($ikon)
+    {
+        if ($ikon) {
+            return Storage::disk('s3')->temporaryUrl($ikon, Carbon::now()->addMinutes(5));
+        }
+
+        return $ikon;
     }
 
     public function getCreatedAtAttribute()
