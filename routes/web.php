@@ -29,6 +29,8 @@ $router->group(['prefix' => 'supervisor', 'middleware' => ['jwt.auth', 'role.sup
         $router->get('/', 'PenjadwalanController@index');
         $router->get('/{id}', 'PenjadwalanController@show');
         $router->post('/', 'PenjadwalanController@store');
+        $router->put('/{id}', 'PenjadwalanController@update');
+        $router->delete('/{id}', 'PenjadwalanController@delete');
     });
 });
 

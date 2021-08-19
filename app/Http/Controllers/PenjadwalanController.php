@@ -55,7 +55,7 @@ class PenjadwalanController extends Controller
                 }
             }
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            return writeLog($th->getMessage());
         }
     }
 
@@ -93,8 +93,55 @@ class PenjadwalanController extends Controller
                 }
             }
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            return writeLog($th->getMessage());
         }
+    }
+
+    public function update($id)
+    {
+        // return $this->request;
+        $decodeToken = parseJwt($this->request->header('Authorization'));
+            $uuid = $decodeToken->user->uuid;
+            $user = User::where('uuid', $uuid)->first();
+            
+            // dd($this->request);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pengguna tidak ditemukan',
+                    'code'    => 404,
+                ]);
+            }
+            else {
+                DB::beginTransaction();
+                try
+                {
+                    $jadwal = Jadwal::where('uuid', $id)->first();
+                    if (empty($jadwal)) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Not Found',
+                            'code'    => 404,
+                        ]);
+                    }
+                    else {
+                        $jadwal->update([
+                            'user_id'   => $this->request->user_id,
+                            'shift_id'  => $this->request->shift_id,
+                            'tanggal'   => $this->request->tanggal
+                        ]);
+                        DB::commit();
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Berhasil diubah!',
+                            'code'    => 200
+                        ]);
+                    }
+                } catch (\Throwable $th) {
+                    DB::rollback();
+                    return writeLog($th->getMessage());
+                }
+            }
     }
 
     public function store()
@@ -137,11 +184,59 @@ class PenjadwalanController extends Controller
                         'code'    => 201
                     ]);
                 } catch (\Throwable $th) {
-                    dd($th->getMessage());
+                    return writeLog($th->getMessage());
                 }
             }
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            return writeLog($th->getMessage());
         }
+    }
+
+    public function delete($id)
+    {
+        // return $this->request;
+        $decodeToken = parseJwt($this->request->header('Authorization'));
+            $uuid = $decodeToken->user->uuid;
+            $user = User::where('uuid', $uuid)->first();
+            
+            // dd($this->request);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pengguna tidak ditemukan',
+                    'code'    => 404,
+                ]);
+            }
+            else {
+                DB::beginTransaction();
+                try
+                {
+                    $jadwal = Jadwal::where('uuid', $id)->first();
+                    if (empty($jadwal)) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Not Found',
+                            'code'    => 404,
+                        ]);
+                    }
+                    else {
+                        $jadwal->delete();
+                        DB::commit();
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Berhasil dihapus!',
+                            'code'    => 200
+                        ]);
+                    }
+                } catch (\Throwable $th) {
+                    DB::rollback();
+                    // dd($th->getMessage());
+                    return response()->json([
+                        'success' => false,
+                        'message' => $th->getMessage(),
+                        'code'    => 401
+                    ]);
+                }
+            }
     }
 }
