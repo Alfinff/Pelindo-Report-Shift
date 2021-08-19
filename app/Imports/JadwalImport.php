@@ -23,7 +23,7 @@ class JadwalImport implements ToCollection, WithStartRow
         {
             $eos = User::where('no_hp', $row[3])->first();
             $shift = Shift::where('nama', $row[1])->first();
-            $date      = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[0])->format('Y-m-d');
+            $date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[0])->format('Y-m-d');
 
             $jadwal = Jadwal::create([
                 'uuid'  => generateUuid(),
@@ -31,28 +31,33 @@ class JadwalImport implements ToCollection, WithStartRow
                 'shift_id' => $shift->uuid,
                 'tanggal' => $date
             ]);
+        }
+        
+        // kirim Info Ke Pengguna
+        $title = 'Jadwal Shift Baru';
+        $isi = 'Ada jadwal shift baru yang telah dibuat';
 
-            // kirim Info Ke Pengguna
+        foreach(User::all() as $item) {
             $informasi = Informasi::create([
                 'uuid'         => generateUuid(),
-                'info_id'      => $jadwal->uuid,
-                'judul'        => 'Jadwal Shift Baru',
-                'isi'          => 'Pada tanggal '.$date.' terdapat jadwal shift anda',
+                'info_id'      => '-',
+                'judul'        => $title,
+                'isi'          => $isi,
                 'jenis'        => env('NOTIF_SHIFT'),
             ]);
 
             InformasiUser::create([
                 'uuid'         => generateUuid(),
-                'user_id'      => $eos->uuid,
+                'user_id'      => $item->uuid,
                 'informasi_id' => $informasi->uuid,
                 'dibaca'       => 0,
             ]);
 
-            if ($eos->fcm_token) {
-                $to      = $eos->fcm_token;
+            if ($item->fcm_token) {
+                $to      = $item->fcm_token;
                 $payload = [
-                    'title'    => 'Jadwal Shift Baru',
-                    'body'     => 'Pada tanggal '.$date.' terdapat jadwal shift anda',
+                    'title'    => $title,
+                    'body'     => $isi,
                     'priority' => 'high',
                 ];
                 sendFcm($to, $payload, $payload);
