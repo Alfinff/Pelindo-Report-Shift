@@ -17,6 +17,7 @@ class ShiftSeeder extends Seeder
         $pagi = Shift::create([
             'uuid'     => generateUuid(),
             'nama'     => 'Pagi',
+            'kode'     => 'P',
             'mulai'    => '07:00:00',
             'selesai'  => '16:00:00',
         ]);
@@ -24,6 +25,7 @@ class ShiftSeeder extends Seeder
         $sore = Shift::create([
             'uuid'     => generateUuid(),
             'nama'     => 'Siang',
+            'kode'     => 'S',
             'mulai'    => '15:00:00',
             'selesai'  => '00:00:00',
         ]);
@@ -31,6 +33,7 @@ class ShiftSeeder extends Seeder
         $malam = Shift::create([
             'uuid'     => generateUuid(),
             'nama'     => 'Malam',
+            'kode'     => 'M',
             'mulai'    => '23:00:00',
             'selesai'  => '08:00:00',
         ]);

@@ -23,7 +23,7 @@ class Jadwal extends Model
         'uuid',
         'user_id',
         'tanggal',
-        'shift_id',
+        'kode_shift',
     ];
 
     protected $connection = 'pelindo_repport';
@@ -37,6 +37,6 @@ class Jadwal extends Model
 
     public function shift()
     {
-        return $this->hasOne(Shift::class, 'uuid', 'shift_id');
+        return $this->hasOne(Shift::class, 'uuid', 'kode_shift');
     }
 }

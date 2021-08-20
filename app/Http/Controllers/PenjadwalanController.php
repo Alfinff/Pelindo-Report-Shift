@@ -20,7 +20,7 @@ class PenjadwalanController extends Controller
         $this->request = $request;
     }
 
-    public function index() 
+    public function index(Request $request) 
     {
         try 
         {
@@ -36,7 +36,23 @@ class PenjadwalanController extends Controller
                 ]);
             }
             else {
-                $jadwal = Jadwal::with('user', 'shift')->paginate(25);
+                $jadwal = Jadwal::with('user', 'shift');
+                if ($request->date) {
+                    $date = $request->date;
+                    $jadwal = $jadwal->whereDate('tanggal', '=', $date);
+                }
+                if ($request->nama) {
+                    $nama = $request->nama;
+                    $jadwal = $jadwal->whereHas('user', function ($q) use ($nama) {
+                        $q->where('nama', $nama);
+                    });
+                }
+                if ($request->shift) {
+                    $shift = $request->shift;
+                    $jadwal = $jadwal->where('shift_id', $shift);
+                }
+
+                $jadwal = $jadwal->paginate(25);
                 $jadwal = $jadwal->setPath('https://pelindo.primakom.co.id/api/shift/supervisor/jadwal');
                 if (empty($jadwal)) {
                     return response()->json([

@@ -17,6 +17,7 @@ class CreateShiftTable extends Migration
             $table->id();
             $table->string('uuid', 191)->unique();
             $table->string('nama');
+	        $table->string('kode', 10)->unique();
             $table->time('mulai')->nullable();
             $table->time('selesai')->nullable();
             $table->timestamps();

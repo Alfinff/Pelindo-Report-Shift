@@ -18,7 +18,7 @@ class CreateShiftJadwalTable extends Migration
             $table->string('uuid', 191)->unique();
             $table->string('user_id');
             $table->date('tanggal');
-            $table->string('shift_id', 191)->nullable();
+            $table->string('kode_shift', 10);
             $table->timestamps();
         });
     }
