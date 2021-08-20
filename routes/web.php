@@ -27,6 +27,7 @@ $router->group(['prefix' => 'superadmin', 'middleware' => ['jwt.auth', 'role.sup
 $router->group(['prefix' => 'supervisor', 'middleware' => ['jwt.auth', 'role.super']], function() use ($router) {
     $router->group(['prefix' => 'jadwal'], function() use ($router) {
         $router->get('/', 'PenjadwalanController@index');
+        $router->post('/tes', 'PenjadwalanController@tes');
         $router->get('/{id}', 'PenjadwalanController@show');
         $router->post('/', 'PenjadwalanController@store');
         $router->put('/{id}', 'PenjadwalanController@update');
