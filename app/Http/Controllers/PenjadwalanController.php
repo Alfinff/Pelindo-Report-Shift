@@ -54,6 +54,16 @@ class PenjadwalanController extends Controller
                 }
 
                 $jadwal = $jadwal->paginate(25);
+                $jadwal->map(function ($jadwal) {
+                    if ($jadwal->shift != null) {
+                       return $jadwal->shift->mulai = date('H:i', strtotime($jadwal->shift->mulai));
+                    }
+                });
+                $jadwal->map(function ($jadwal) {
+                    if ($jadwal->shift != null) {
+                       return $jadwal->shift->selesai = date('H:i', strtotime($jadwal->shift->selesai));
+                    }
+                });
                 $jadwal = $jadwal->setPath('https://pelindo.primakom.co.id/api/shift/supervisor/jadwal');
                 if (empty($jadwal)) {
                     return response()->json([

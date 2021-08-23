@@ -24,7 +24,7 @@ class ShiftSeeder extends Seeder
         
         $sore = Shift::create([
             'uuid'     => generateUuid(),
-            'nama'     => 'Siang',
+            'nama'     => 'Sore',
             'kode'     => 'S',
             'mulai'    => '15:00:00',
             'selesai'  => '00:00:00',
