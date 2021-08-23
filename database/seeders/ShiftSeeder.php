@@ -27,7 +27,7 @@ class ShiftSeeder extends Seeder
             'nama'     => 'Sore',
             'kode'     => 'S',
             'mulai'    => '15:00:00',
-            'selesai'  => '00:00:00',
+            'selesai'  => '23:59:59',
         ]);
 
         $malam = Shift::create([
@@ -37,5 +37,14 @@ class ShiftSeeder extends Seeder
             'mulai'    => '23:00:00',
             'selesai'  => '08:00:00',
         ]);
+
+	$libur = Shift::create([
+            'uuid'     => generateUuid(),
+            'nama'     => 'Libur',
+            'kode'     => 'L',
+            'mulai'    => '00:00:00',
+            'selesai'  => '00:00:00',
+        ]);
+
     }
 }

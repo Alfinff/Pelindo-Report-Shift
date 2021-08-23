@@ -38,22 +38,18 @@ class PenjadwalanController extends Controller
             }
             else {
                 $jadwal = Jadwal::with('user', 'shift');
-                if ($request->date) {
-                    $date = $request->date;
-                    $jadwal = $jadwal->whereDate('tanggal', '=', $date);
-                }
                 if ($request->nama) {
                     $nama = $request->nama;
                     $jadwal = $jadwal->whereHas('user', function ($q) use ($nama) {
-                        $q->where('nama', $nama);
+                        $q->where('nama', 'ilike', '%'. $nama .'%');
                     });
                 }
-                if ($request->shift) {
-                    $shift = $request->shift;
-                    $jadwal = $jadwal->where('shift_id', $shift);
+                if ($request->kode_shift) {
+                    $shift = $request->kode_shift;
+                    $jadwal = $jadwal->where('kode_shift', $shift);
                 }
 
-                $jadwal = $jadwal->paginate(25);
+                $jadwal = $jadwal->get();
                 $jadwal->map(function ($jadwal) {
                     if ($jadwal->shift != null) {
                        return $jadwal->shift->mulai = date('H:i', strtotime($jadwal->shift->mulai));
@@ -64,7 +60,7 @@ class PenjadwalanController extends Controller
                        return $jadwal->shift->selesai = date('H:i', strtotime($jadwal->shift->selesai));
                     }
                 });
-                $jadwal = $jadwal->setPath('https://pelindo.primakom.co.id/api/shift/supervisor/jadwal');
+                // $jadwal = $jadwal->setPath('https://pelindo.primakom.co.id/api/shift/supervisor/jadwal');
                 if (empty($jadwal)) {
                     return response()->json([
                         'success' => false,
@@ -154,7 +150,7 @@ class PenjadwalanController extends Controller
                     else {
                         $jadwal->update([
                             'user_id'   => $this->request->user_id,
-                            'shift_id'  => $this->request->shift_id,
+                            'kode_shift'  => $this->request->kode,
                             'tanggal'   => $this->request->tanggal
                         ]);
                         DB::commit();
