@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithStartRow;
@@ -13,21 +14,32 @@ use App\Models\InformasiUser;
 
 class ShiftJadwal implements ToCollection, WithStartRow
 {
-    /**
-    * @param Collection $collection
-    */
+
+    protected $month;
+
+    public function __construct($month)
+    {
+        $this->month = $month; 
+    }
 
     public function collection(Collection $rows)
     {
+        $m = date('m');
+        if($this->month) {
+            $m = $this->month;
+        }
+
         foreach ($rows as $row)
         {
             $shift = [];
             // jumlah hari bulan ini
             $d=cal_days_in_month(CAL_GREGORIAN,date('m'),date('y'));
+            if($this->month) {
+                $d=cal_days_in_month(CAL_GREGORIAN,date($this->month),date('y'));
+            }
             for($i = 2; $i <= ((int)$d + 1); $i++) {
                 array_push($shift, $row[$i]);
             }
-            // $shift = [$row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12], $row[13], $row[14], $row[15], $row[16], $row[17], $row[18], $row[19], $row[20], $row[21], $row[22], $row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29], $row[30], $row[31], $row[32]];
 
             $eos = User::where('email', $row[1])->first();
             if(isset($eos->uuid)) {   
@@ -37,7 +49,7 @@ class ShiftJadwal implements ToCollection, WithStartRow
                         'uuid'  => generateUuid(),
                         'user_id' => $eos->uuid,
                         'kode_shift' => $val,
-                        'tanggal' => date('Y-m-').$i
+                        'tanggal' => date('Y').'-'.$m.'-'.$i
                     ]);
                     $i++;
                 }
