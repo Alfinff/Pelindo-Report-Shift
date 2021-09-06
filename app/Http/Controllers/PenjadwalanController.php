@@ -186,6 +186,8 @@ class PenjadwalanController extends Controller
             {
                 $validator = Validator::make($this->request->all(), [
                     'file' => 'required|mimes:csv,xls,xlsx',
+                    'month' => 'required',
+                    'year' => 'required',
                 ]);
         
                 if ($validator->fails()) {
@@ -194,12 +196,14 @@ class PenjadwalanController extends Controller
                 
                 try{
                     $month = $this->request->month;
+                    $year = $this->request->year;
+                    
                     $current   = Carbon::now()->format('YmdHs');
                     $file = $this->request->file;
                     $nama_file = $current.'_'.$file->getClientOriginalName();
                     $file->move('jadwal',$nama_file);
 
-                    Excel::import(new ShiftJadwal($month), public_path('/jadwal/'.$nama_file));
+                    Excel::import(new ShiftJadwal($month, $year), public_path('/jadwal/'.$nama_file));
                     unlink(public_path('/jadwal/'.$nama_file));
                     return response()->json([
                         'success' => true,

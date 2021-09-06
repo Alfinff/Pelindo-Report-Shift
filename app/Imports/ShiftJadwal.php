@@ -16,26 +16,32 @@ class ShiftJadwal implements ToCollection, WithStartRow
 {
 
     protected $month;
+    protected $year;
 
-    public function __construct($month)
+    public function __construct($month, $year)
     {
-        $this->month = $month; 
+        $this->month = $month;
+        $this->year = $year;
     }
 
     public function collection(Collection $rows)
     {
         $m = date('m');
+        $y = date('Y');
         if($this->month) {
             $m = $this->month;
+        }
+        if($this->year) {
+            $y = $this->year;
         }
 
         foreach ($rows as $row)
         {
             $shift = [];
             // jumlah hari bulan ini
-            $d=cal_days_in_month(CAL_GREGORIAN,date('m'),date('y'));
-            if($this->month) {
-                $d=cal_days_in_month(CAL_GREGORIAN,date($this->month),date('y'));
+            $d=cal_days_in_month(CAL_GREGORIAN,$m,$y);
+            if($this->month && $this->year) {
+                $d=cal_days_in_month(CAL_GREGORIAN,date($this->month),date($this->year));
             }
             for($i = 2; $i <= ((int)$d + 1); $i++) {
                 array_push($shift, $row[$i]);
@@ -49,7 +55,7 @@ class ShiftJadwal implements ToCollection, WithStartRow
                         'uuid'  => generateUuid(),
                         'user_id' => $eos->uuid,
                         'kode_shift' => $val,
-                        'tanggal' => date('Y').'-'.$m.'-'.$i
+                        'tanggal' => $y.'-'.$m.'-'.$i
                     ]);
                     $i++;
                 }
