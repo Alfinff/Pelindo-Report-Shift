@@ -78,15 +78,15 @@ class ShiftJadwal implements ToCollection, WithStartRow
         $title = 'Jadwal Shift Baru';
         $isi = 'Ada jadwal shift baru yang telah dibuat';
 
-        foreach(User::all() as $item) {
-            $informasi = Informasi::create([
-                'uuid'         => generateUuid(),
-                'info_id'      => '-',
-                'judul'        => $title,
-                'isi'          => $isi,
-                'jenis'        => env('NOTIF_SHIFT'),
-            ]);
+        $informasi = Informasi::create([
+            'uuid'         => generateUuid(),
+            'info_id'      => '-',
+            'judul'        => $title,
+            'isi'          => $isi,
+            'jenis'        => env('NOTIF_SHIFT'),
+        ]);
 
+        foreach(User::all() as $item) {
             InformasiUser::create([
                 'uuid'         => generateUuid(),
                 'user_id'      => $item->uuid,
