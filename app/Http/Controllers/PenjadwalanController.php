@@ -38,7 +38,7 @@ class PenjadwalanController extends Controller
                 ]);
             }
             else {
-                $jadwal = Jadwal::with('user', 'shift');
+                $jadwal = Jadwal::with('user', 'shift', 'history');
                 if ($request->nama) {
                     $nama = $request->nama;
                     $jadwal = $jadwal->whereHas('user', function ($q) use ($nama) {
@@ -99,7 +99,7 @@ class PenjadwalanController extends Controller
                 ]);
             }
             else {
-                $jadwal = Jadwal::where('uuid', $id)->with('user', 'shift')->first();
+                $jadwal = Jadwal::where('uuid', $id)->with('user', 'shift', 'history')->first();
                 if (empty($jadwal)) {
                     return response()->json([
                         'success' => false,
