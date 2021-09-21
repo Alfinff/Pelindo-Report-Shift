@@ -29,10 +29,10 @@ class ShiftJadwal implements ToCollection, WithStartRow
         $m = date('m');
         $y = date('Y');
         if($this->month) {
-            $m = $this->month;
+            $m = date($this->month);
         }
         if($this->year) {
-            $y = $this->year;
+            $y = date($this->year);
         }
 
         foreach ($rows as $row)
@@ -40,9 +40,10 @@ class ShiftJadwal implements ToCollection, WithStartRow
             $shift = [];
             // jumlah hari bulan ini
             $d=cal_days_in_month(CAL_GREGORIAN,$m,$y);
-            if($this->month && $this->year) {
-                $d=cal_days_in_month(CAL_GREGORIAN,date($this->month),date($this->year));
-            }
+            // if($this->month && $this->year) {
+            //     $d=cal_days_in_month(CAL_GREGORIAN,date($this->month),date($this->year));
+            // }
+
             for($i = 2; $i <= ((int)$d + 1); $i++) {
                 array_push($shift, $row[$i]);
             }
@@ -51,12 +52,24 @@ class ShiftJadwal implements ToCollection, WithStartRow
             if(isset($eos->uuid)) {   
                 $i = 1;
                 foreach($shift as $item => $val) {   
-                    $jadwal = Jadwal::create([
-                        'uuid'  => generateUuid(),
-                        'user_id' => $eos->uuid,
-                        'kode_shift' => $val,
-                        'tanggal' => $y.'-'.$m.'-'.$i
-                    ]);
+                    $tanggal = '';
+                    $tanggal = $y.'-'.$m.'-'.$i;
+                    $cek = Jadwal::where('user_id', $eos->uuid)->whereDate('tanggal', $tanggal)->first();
+
+                    if($cek) {
+                        $cek->update([
+                            'kode_shift' => $val,
+                            'tanggal' => $tanggal
+                        ]);
+                    } else {
+                        $jadwal = Jadwal::create([
+                            'uuid'  => generateUuid(),
+                            'user_id' => $eos->uuid,
+                            'kode_shift' => $val,
+                            'tanggal' => $tanggal
+                        ]);
+                    }
+                    
                     $i++;
                 }
             }
