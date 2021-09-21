@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
 use App\Models\Jadwal;
+use App\Models\ShiftHistory;
 use Carbon\Carbon;
 use App\Imports\JadwalImport;
 use App\Imports\ShiftJadwal;
@@ -148,11 +149,22 @@ class PenjadwalanController extends Controller
                         ]);
                     }
                     else {
+
+                        // tambah history tukar shift
+                        $history = ShiftHistory::create([
+                            'uuid'     => generateUuid(),
+                            'jadwal_shift_id' => $jadwal->uuid,
+                            'tanggal_sebelumnya' => $jadwal->tanggal,
+                            'shift_sebelumnya' => $jadwal->kode_shift,
+                            'keterangan' => $this->request->keterangan 
+                        ]);
+
                         $jadwal->update([
                             'user_id'   => $this->request->user_id,
                             'kode_shift'  => $this->request->kode,
                             'tanggal'   => $this->request->tanggal
                         ]);
+
                         DB::commit();
                         return response()->json([
                             'success' => true,
