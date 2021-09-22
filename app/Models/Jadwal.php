@@ -42,7 +42,7 @@ class Jadwal extends Model
 
     public function history()
     {
-        return $this->hasOne(ShiftHistory::class, 'uuid', 'jadwal_shift_id');
+        return $this->hasMany(ShiftHistory::class, 'jadwal_shift_id', 'uuid');
     }
 
 }

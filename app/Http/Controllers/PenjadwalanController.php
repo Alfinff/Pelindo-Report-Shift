@@ -151,14 +151,24 @@ class PenjadwalanController extends Controller
                     else {
 
                         // tambah history tukar shift
-                        $history = ShiftHistory::create([
-                            'uuid'     => generateUuid(),
-                            'jadwal_shift_id' => $jadwal->uuid,
-                            'tanggal_sebelumnya' => $jadwal->tanggal,
-                            'shift_sebelumnya' => $jadwal->kode_shift,
-                            'keterangan' => $this->request->keterangan 
-                        ]);
-
+                        // $history = ShiftHistory::where('jadwal_shift_id', $jadwal->uuid)->first();
+                        // if($history) {
+                        //     $history->update([
+                        //         'jadwal_shift_id' => $jadwal->uuid,
+                        //         'tanggal_sebelumnya' => $jadwal->tanggal,
+                        //         'shift_sebelumnya' => $jadwal->kode_shift,
+                        //         'keterangan' => $this->request->keterangan 
+                        //     ]);
+                        // } else {
+                            $history = ShiftHistory::create([
+                                'uuid'     => generateUuid(),
+                                'jadwal_shift_id' => $jadwal->uuid,
+                                'tanggal_sebelumnya' => $jadwal->tanggal,
+                                'shift_sebelumnya' => $jadwal->kode_shift,
+                                'keterangan' => $this->request->keterangan 
+                            ]);
+                        // }
+                            
                         $jadwal->update([
                             'user_id'   => $this->request->user_id,
                             'kode_shift'  => $this->request->kode,
