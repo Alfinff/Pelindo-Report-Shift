@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Models\Profile;
 use App\Models\Shift;
+use App\Models\Jadwal;
 
 class ShiftController extends Controller
 {
@@ -37,6 +38,39 @@ class ShiftController extends Controller
                     'data'  => $shift
                 ]);
             }
+        } catch (\Throwable $th) {
+            return writeLog($th->getMessage());
+        }
+    }
+
+    public function export()
+    {
+        try 
+        {
+            $jadwal = Jadwal::with('user', 'shift', 'history');
+
+            if($this->request->month) {
+                $jadwal = $jadwal->whereMonth('tanggal', $this->request->month);
+            } else {
+                $jadwal = $jadwal->whereMonth('tanggal', date('m'));
+            }
+
+            $jadwal = $jadwal->whereYear('tanggal', date('Y'))->get();
+            
+            if (empty($jadwal)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Not Found',
+                    'code'    => 404,
+                ]);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'OK',
+                'code'    => 200,
+                'data'  => $jadwal
+            ]);
         } catch (\Throwable $th) {
             return writeLog($th->getMessage());
         }

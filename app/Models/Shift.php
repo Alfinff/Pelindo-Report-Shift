@@ -22,4 +22,14 @@ class Shift extends Model
     protected $connection = 'pelindo_repport';
     protected $table      = 'ms_shift';
     protected $guarded    = [];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return formatTanggal($value);
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return formatTanggal($value);
+    }
 }

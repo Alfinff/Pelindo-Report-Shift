@@ -45,4 +45,14 @@ class Jadwal extends Model
         return $this->hasMany(ShiftHistory::class, 'jadwal_shift_id', 'uuid');
     }
 
+    public function getCreatedAtAttribute($value)
+    {
+        return formatTanggal($value);
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return formatTanggal($value);
+    }
+
 }
