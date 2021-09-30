@@ -20,6 +20,14 @@ $router->get('/', function () use ($router) {
     echo 'API Pelindo Report - Shift';
 });
 
+$router->group(['prefix' => 'superadmin', 'middleware' => ['jwt.auth', 'role.super']], function() use ($router) {
+    $router->group(['prefix' => 'jadwal'], function() use ($router) {
+        $router->group(['prefix' => 'temp'], function() use ($router) {
+            $router->get('/', 'PenjadwalanController@getListTemp');
+        });
+    });
+});
+
 $router->group(['prefix' => 'supervisor', 'middleware' => ['jwt.auth', 'role.super']], function() use ($router) {
     $router->group(['prefix' => 'jadwal'], function() use ($router) {
         $router->get('/', 'PenjadwalanController@index');

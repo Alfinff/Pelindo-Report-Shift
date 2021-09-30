@@ -425,9 +425,7 @@ class PenjadwalanController extends Controller
             DB::beginTransaction();
             try
             {
-                $jadwal = JadwalTemp::select('*');
-
-                $jadwal = $jadwal->get()->groupBy(function($val) {
+                $jadwal = JadwalTemp::get()->groupBy(function($val) {
                     return Carbon::parse($val->tanggal)->format('Y');
                 });
 
@@ -514,6 +512,64 @@ class PenjadwalanController extends Controller
         }
     }
 
+    public function getListTemp(Request $request)
+    {
+        $decodeToken = parseJwt($this->request->header('Authorization'));
+        $uuid = $decodeToken->user->uuid;
+        $user = User::where('uuid', $uuid)->first();
+        
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pengguna tidak ditemukan',
+                'code'    => 404,
+            ]);
+        }
+        else {
+            DB::beginTransaction();
+            try
+            {
+                $jadwal = JadwalTemp::get()->groupBy(function($val) {
+                    return Carbon::parse($val->tanggal)->format('Y');
+                });
+
+                if (!count($jadwal)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Not Found',
+                        'code'    => 404,
+                    ]);
+                }
+
+                $data = [];
+                foreach($jadwal as $j => $val) {
+                    $bulan = JadwalTemp::select('*')->whereYear('tanggal', $j)->get()->groupBy(function($val) {
+                        return Carbon::parse($val->tanggal)->format('m');
+                    });
+
+                    if (count($bulan)) {
+                        foreach($bulan as $b => $valb) {
+                            $input = [];
+                            $input['tahun'] = $j;
+                            $input['bulan'] = $this->bulan[(int)$b];
+                            array_push($data, $input);
+                        }
+                    }
+                }
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data Jadwal Belum Diapprove',
+                    'code'    => 200,
+                    'data'    => $data
+                ]);
+            } catch (\Throwable $th) {
+                DB::rollback();
+                return writeLog($th->getMessage());
+            }
+        }
+    }
+
     public function approveTemp(Request $request)
     {
         $decodeToken = parseJwt($this->request->header('Authorization'));
@@ -564,8 +620,8 @@ class PenjadwalanController extends Controller
                     ]);
                 }
 
-                // truncate jadwal temp
-                JadwalTemp::whereMonth('tanggal', $month)->whereYear('tanggal', $year)->truncate();
+                // delete jadwal temp
+                JadwalTemp::whereMonth('tanggal', $month)->whereYear('tanggal', $year)->delete();
 
                 
                 // kirim notif ke semua eos

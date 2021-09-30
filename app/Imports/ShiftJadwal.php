@@ -33,8 +33,8 @@ class ShiftJadwal implements ToCollection, WithStartRow
             $y = date($this->year);
         }
 
-        // truncate data dengan bulan yang sama
-        JadwalTemp::whereMonth('tanggal', $m)->whereYear('tanggal', $y)->truncate();
+        // delete data dengan bulan yang sama
+        JadwalTemp::whereMonth('tanggal', $m)->whereYear('tanggal', $y)->delete();
 
         foreach ($rows as $row)
         {
