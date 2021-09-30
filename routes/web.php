@@ -20,27 +20,30 @@ $router->get('/', function () use ($router) {
     echo 'API Pelindo Report - Shift';
 });
 
-$router->group(['prefix' => 'superadmin', 'middleware' => ['jwt.auth', 'role.superadmin']], function() use ($router) {
-    
-});
-
 $router->group(['prefix' => 'supervisor', 'middleware' => ['jwt.auth', 'role.super']], function() use ($router) {
     $router->group(['prefix' => 'jadwal'], function() use ($router) {
         $router->get('/', 'PenjadwalanController@index');
         $router->get('/export', 'ShiftController@export');
+        $router->get('/history', 'PenjadwalanController@history');
         $router->post('/tes', 'PenjadwalanController@tes');
-        $router->get('/{id}', 'PenjadwalanController@show');
         $router->post('/', 'PenjadwalanController@store');
+
+        $router->group(['prefix' => 'temp'], function() use ($router) {
+            $router->get('/', 'PenjadwalanController@temp');
+            $router->group(['prefix' => 'data'], function() use ($router) {
+                $router->get('/tahun', 'PenjadwalanController@dataTempTahun');
+                $router->get('/bulan/{tahun}', 'PenjadwalanController@dataTempBulan');
+            });
+            $router->post('/approve', 'PenjadwalanController@approveTemp');
+        });
+
+        $router->get('/{id}', 'PenjadwalanController@show');
         $router->put('/{id}', 'PenjadwalanController@update');
         $router->delete('/{id}', 'PenjadwalanController@delete');
     });
 });
 
-$router->group(['prefix' => 'eos', 'middleware' => ['jwt.auth', 'role.eos']], function() use ($router) {
-    
-});
-
-$router->group(['prefix' => 'utils'], function() use ($router) {
+$router->group(['prefix' => 'utils', 'middleware' => ['jwt.auth', 'role.super']], function() use ($router) {
     $router->group(['prefix' => 'shift'], function() use ($router) {
         $router->get('/', 'ShiftController@index');
     });    

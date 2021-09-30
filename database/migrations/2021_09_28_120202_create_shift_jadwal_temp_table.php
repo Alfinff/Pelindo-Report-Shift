@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateShiftHistoryTable extends Migration
+class CreateShiftJadwalTempTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,12 @@ class CreateShiftHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('ms_shift_history', function (Blueprint $table) {
+        Schema::create('ms_shift_jadwal_temp', function (Blueprint $table) {
             $table->id();
             $table->string('uuid', 191)->unique();
-            $table->string('jadwal_shift_id');
-            $table->string('tanggal_sebelumnya');
-            $table->string('shift_sebelumnya');
-            $table->string('tanggal_sekarang');
-            $table->string('shift_sekarang');
-            $table->string('editor');
-            $table->text('keterangan')->nullable();
+            $table->string('user_id');
+            $table->date('tanggal');
+            $table->string('kode_shift', 10);
             $table->timestamps();
         });
     }
@@ -34,6 +30,6 @@ class CreateShiftHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ms_shift_history');
+        Schema::dropIfExists('ms_shift_jadwal_temp');
     }
 }

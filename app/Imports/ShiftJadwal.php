@@ -6,11 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithStartRow;
-use App\Models\Jadwal;
+use App\Models\JadwalTemp;
 use App\Models\Shift;
 use App\Models\User;
-use App\Models\Informasi;
-use App\Models\InformasiUser;
 
 class ShiftJadwal implements ToCollection, WithStartRow
 {
@@ -35,6 +33,9 @@ class ShiftJadwal implements ToCollection, WithStartRow
             $y = date($this->year);
         }
 
+        // truncate data dengan bulan yang sama
+        JadwalTemp::whereMonth('tanggal', $m)->whereYear('tanggal', $y)->truncate();
+
         foreach ($rows as $row)
         {
             $shift = [];
@@ -54,7 +55,7 @@ class ShiftJadwal implements ToCollection, WithStartRow
                 foreach($shift as $item => $val) {   
                     $tanggal = '';
                     $tanggal = $y.'-'.$m.'-'.$i;
-                    $cek = Jadwal::where('user_id', $eos->uuid)->whereDate('tanggal', $tanggal)->first();
+                    $cek = JadwalTemp::where('user_id', $eos->uuid)->whereDate('tanggal', $tanggal)->first();
 
                     if($cek) {
                         $cek->update([
@@ -62,7 +63,7 @@ class ShiftJadwal implements ToCollection, WithStartRow
                             'tanggal' => $tanggal
                         ]);
                     } else {
-                        $jadwal = Jadwal::create([
+                        $jadwal = JadwalTemp::create([
                             'uuid'  => generateUuid(),
                             'user_id' => $eos->uuid,
                             'kode_shift' => $val,
@@ -75,35 +76,6 @@ class ShiftJadwal implements ToCollection, WithStartRow
             }
         }
 
-        $title = 'Jadwal Shift Baru';
-        $isi = 'Ada jadwal shift baru yang telah dibuat';
-
-        $informasi = Informasi::create([
-            'uuid'         => generateUuid(),
-            'info_id'      => '-',
-            'judul'        => $title,
-            'isi'          => $isi,
-            'jenis'        => env('NOTIF_SHIFT'),
-        ]);
-
-        foreach(User::all() as $item) {
-            InformasiUser::create([
-                'uuid'         => generateUuid(),
-                'user_id'      => $item->uuid,
-                'informasi_id' => $informasi->uuid,
-                'dibaca'       => 0,
-            ]);
-
-            if ($item->fcm_token) {
-                $to      = $item->fcm_token;
-                $payload = [
-                    'title'    => $title,
-                    'body'     => $isi,
-                    'priority' => 'high',
-                ];
-                sendFcm($to, $payload, $payload);
-            }
-        }
     }
 
     public function startRow(): int

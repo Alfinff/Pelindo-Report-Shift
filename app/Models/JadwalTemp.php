@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ShiftHistory extends Model
+class JadwalTemp extends Model
 {
     use HasFactory;
 
@@ -19,18 +19,30 @@ class ShiftHistory extends Model
         'id'
     ];
 
+    protected $fillable = [
+        'uuid',
+        'user_id',
+        'tanggal',
+        'kode_shift',
+    ];
+
     protected $connection = 'pelindo_repport';
-    protected $table      = 'ms_shift_history';
+    protected $table      = 'ms_shift_jadwal_temp';
     protected $guarded    = [];
 
-    public function jadwal()
+    public function user()
     {
-        return $this->hasOne(Jadwal::class, 'uuid', 'jadwal_shift_id');
+        return $this->hasOne(User::class, 'uuid', 'user_id');
     }
 
-    public function editoruser()
+    public function shift()
     {
-        return $this->hasOne(User::class, 'uuid', 'editor');
+        return $this->hasOne(Shift::class, 'kode', 'kode_shift');
+    }
+
+    public function history()
+    {
+        return $this->hasMany(ShiftHistory::class, 'jadwal_shift_id', 'uuid');
     }
 
     public function getCreatedAtAttribute($value)
@@ -42,4 +54,5 @@ class ShiftHistory extends Model
     {
         return formatTanggal($value);
     }
+
 }
