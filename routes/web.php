@@ -14,7 +14,7 @@
 */
 
 \URL::forceScheme('https');
-\URL::forceRootUrl(env('APP_URL', 'https://pelindo.primakom.co.id/api/shift/'));
+\URL::forceRootUrl(env('APP_URL', 'https://centro.pelindo.co.id/api/shift/'));
 
 $router->get('/', function () use ($router) {
     echo 'API Pelindo Report - Shift';

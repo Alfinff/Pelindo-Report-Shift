@@ -147,7 +147,8 @@ $app->router->group([
 // $app->make('url')->to(env('APP_URL'));
 // $app['url']->to(env('APP_URL'));
 
-$app->make('url')->forceRootUrl(env('APP_URL', 'https://pelindo.primakom.co.id/api/shift/'));
+// $app->make('url')->forceRootUrl(env('APP_URL', 'https://pelindo.primakom.co.id/api/shift/'));
+$app->make('url')->forceRootUrl(env('APP_URL', 'https://centro.pelindo.co.id/api/shift/'));
 
 return $app;
 
