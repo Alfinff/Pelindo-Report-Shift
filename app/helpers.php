@@ -1,6 +1,5 @@
 <?php
 
-\Firebase\JWT\JWT::$leeway = 10;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Ramsey\Uuid\Uuid;
