@@ -87,7 +87,7 @@ class PenjadwalanController extends Controller
                        return $jadwal->shift->selesai = date('H:i', strtotime($jadwal->shift->selesai));
                     }
                 });
-                // $jadwal = $jadwal->setPath('https://pelindo.primakom.co.id/api/shift/supervisor/jadwal');
+                // $jadwal = $jadwal->setPath(env('APP_URL', 'https://centro.pelindo.co.id/api/shift/').'/supervisor/jadwal');
                 
                 return response()->json([
                     'success' => true,
@@ -149,7 +149,7 @@ class PenjadwalanController extends Controller
                        return $jadwal->shift->selesai = date('H:i', strtotime($jadwal->shift->selesai));
                     }
                 });
-                // $jadwal = $jadwal->setPath('https://pelindo.primakom.co.id/api/shift/supervisor/jadwal');
+                // $jadwal = $jadwal->setPath(env('APP_URL', 'https://centro.pelindo.co.id/api/shift/').'/supervisor/jadwal');
                 
                 return response()->json([
                     'success' => true,
