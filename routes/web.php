@@ -50,6 +50,7 @@ $router->group(['prefix' => 'supervisor', 'middleware' => ['jwt.auth', 'role.sup
         $router->get('/history', 'PenjadwalanController@history');
         $router->post('/tes', 'PenjadwalanController@tes');
         $router->post('/', 'PenjadwalanController@store');
+        $router->post('/tambah', 'ShiftController@addShift');
 
         $router->group(['prefix' => 'temp'], function() use ($router) {
             $router->get('/', 'PenjadwalanController@temp');
