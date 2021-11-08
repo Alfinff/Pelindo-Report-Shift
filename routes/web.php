@@ -67,7 +67,8 @@ $router->group(['prefix' => 'supervisor', 'middleware' => ['jwt.auth', 'role.sup
     });
 });
 
-$router->group(['prefix' => 'utils', 'middleware' => ['jwt.auth', 'role.super']], function() use ($router) {
+// , 'middleware' => ['jwt.auth', 'role.super', 'role.eos']
+$router->group(['prefix' => 'utils'], function() use ($router) {
     $router->group(['prefix' => 'shift'], function() use ($router) {
         $router->get('/', 'ShiftController@index');
     });    
