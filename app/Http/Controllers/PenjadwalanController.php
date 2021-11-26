@@ -55,7 +55,7 @@ class PenjadwalanController extends Controller
                 ]);
             }
             else {
-                $jadwal = Jadwal::with('user', 'shift', 'history', 'history.editoruser');
+                $jadwal = Jadwal::with('user', 'shift', 'history', 'history.editoruser')->whereHas('user');
                 if ($request->nama) {
                     $nama = $request->nama;
                     $jadwal = $jadwal->whereHas('user', function ($q) use ($nama) {
@@ -386,7 +386,7 @@ class PenjadwalanController extends Controller
                 ]);
             }
             else {
-                $history = ShiftHistory::with('jadwal', 'editoruser', 'jadwal.user', 'jadwal.shift')->get();
+                $history = ShiftHistory::with('jadwal', 'editoruser', 'jadwal.user', 'jadwal.shift')->whereMonth('created_at', date('m'))->get();
                 if (!count($history)) {
                     return response()->json([
                         'success' => false,
