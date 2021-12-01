@@ -72,7 +72,7 @@ class PenjadwalanController extends Controller
                 if (!count($jadwal)) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Not Found',
+                        'message' => 'Data Tidak Ditemukan',
                         'code'    => 404,
                     ]);
                 }
@@ -134,7 +134,7 @@ class PenjadwalanController extends Controller
                 if (!count($jadwal)) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Not Found',
+                        'message' => 'Data Tidak Ditemukan',
                         'code'    => 404,
                     ]);
                 }
@@ -185,7 +185,7 @@ class PenjadwalanController extends Controller
                 if (!$jadwal) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Not Found',
+                        'message' => 'Data Tidak Ditemukan',
                         'code'    => 404,
                     ]);
                 }
@@ -226,7 +226,7 @@ class PenjadwalanController extends Controller
                     if (!$jadwal) {
                         return response()->json([
                             'success' => false,
-                            'message' => 'Not Found',
+                            'message' => 'Data Tidak Ditemukan',
                             'code'    => 404,
                         ]);
                     }
@@ -349,7 +349,7 @@ class PenjadwalanController extends Controller
                     if (!$jadwal) {
                         return response()->json([
                             'success' => false,
-                            'message' => 'Not Found',
+                            'message' => 'Data Tidak Ditemukan',
                             'code'    => 404,
                         ]);
                     }
@@ -386,11 +386,11 @@ class PenjadwalanController extends Controller
                 ]);
             }
             else {
-                $history = ShiftHistory::with('jadwal', 'editoruser', 'jadwal.user', 'jadwal.shift')->whereMonth('created_at', date('m'))->get();
+                $history = ShiftHistory::with('jadwal', 'editoruser', 'jadwal.user', 'jadwal.shift')->whereMonth('created_at', date('m'))->orderBy('created_at', 'desc')->get();
                 if (!count($history)) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Not Found',
+                        'message' => 'Data Tidak Ditemukan',
                         'code'    => 404,
                     ]);
                 }
@@ -432,7 +432,7 @@ class PenjadwalanController extends Controller
                 if (!count($jadwal)) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Not Found',
+                        'message' => 'Data Tidak Ditemukan',
                         'code'    => 404,
                     ]);
                 }
@@ -486,7 +486,7 @@ class PenjadwalanController extends Controller
                 if (!count($jadwal)) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Not Found',
+                        'message' => 'Data Tidak Ditemukan',
                         'code'    => 404,
                     ]);
                 }
@@ -536,7 +536,7 @@ class PenjadwalanController extends Controller
                 if (!count($jadwal)) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Not Found',
+                        'message' => 'Data Tidak Ditemukan',
                         'code'    => 404,
                     ]);
                 }
@@ -604,7 +604,7 @@ class PenjadwalanController extends Controller
                 if (!count($jadwal)) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Not Found',
+                        'message' => 'Data Tidak Ditemukan',
                         'code'    => 404,
                     ]);
                 }
