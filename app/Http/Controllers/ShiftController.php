@@ -23,7 +23,8 @@ class ShiftController extends Controller
     {
         try 
         {
-            $shift = Shift::where('kode', '!=', 'L')->paginate(25);
+            // where('kode', '!=', 'L')->
+            $shift = Shift::paginate(25);
             $shift = $shift->setPath(env('APP_URL', 'https://centro.pelindo.co.id/api/shift/').'/utils/shift');
             if (empty($shift)) {
                 return response()->json([
