@@ -56,19 +56,21 @@ class ShiftJadwal implements ToCollection, WithStartRow
                     $tanggal = '';
                     $tanggal = $y.'-'.$m.'-'.$i;
                     $cek = JadwalTemp::where('user_id', $eos->uuid)->whereDate('tanggal', $tanggal)->first();
-
-                    if($cek) {
-                        $cek->update([
-                            'kode_shift' => $val,
-                            'tanggal' => $tanggal
-                        ]);
-                    } else {
-                        $jadwal = JadwalTemp::create([
-                            'uuid'  => generateUuid(),
-                            'user_id' => $eos->uuid,
-                            'kode_shift' => $val,
-                            'tanggal' => $tanggal
-                        ]);
+                    
+                    if(!empty($val)) {
+                        if($cek) {
+                            $cek->update([
+                                'kode_shift' => $val,
+                                'tanggal' => $tanggal
+                            ]);
+                        } else {
+                            $jadwal = JadwalTemp::create([
+                                'uuid'  => generateUuid(),
+                                'user_id' => $eos->uuid,
+                                'kode_shift' => $val,
+                                'tanggal' => $tanggal
+                            ]);
+                        }
                     }
                     
                     $i++;
